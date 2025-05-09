@@ -1,14 +1,14 @@
 using 'main.bicep'
 
-param fleetResourceGroup = 'fleet-demo-kcd'
-var vmsize = 'Standard_D2ahs_v4'
+param fleetResourceGroup = 'fleet-ad-demo-rg'
+param vmsize = 'standard_a2_v2'
 
 param members = [
   {
     name: 'member-1-ad-demo'
     group: 'group1'
     dnsPrefix: 'member1'
-    location: 'southafricawest'
+    location: 'japanwest'
     agentCount: 1
     agentVMSize: vmsize
     osType: 'Linux'
@@ -17,7 +17,7 @@ param members = [
   {
     name: 'member-2-ad-demo'
     group: 'group2'
-    dnsPrefix: 'member3'
+    dnsPrefix: 'member2'
     location: 'koreacentral'
     agentCount: 1
     agentVMSize: vmsize
@@ -25,11 +25,11 @@ param members = [
     osSku: 'AzureLinux'
   }
   {
-    name: 'member-2-ad-demo'
+    name: 'member-3-ad-demo'
     group: 'group2'
-    dnsPrefix: 'member4'
-    location: 'francesouth'
-    agentCount: 21
+    dnsPrefix: 'member3'
+    location: 'polandcentral'
+    agentCount: 1
     agentVMSize: vmsize
     osType: 'Linux'
     osSKU: 'AzureLinux'

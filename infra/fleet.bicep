@@ -1,5 +1,6 @@
 param name string
 param tags object
+param hubVmSize string
 param location string = resourceGroup().location
 
 resource fleetResource 'Microsoft.ContainerService/fleets@2025-03-01' = {
@@ -9,8 +10,7 @@ resource fleetResource 'Microsoft.ContainerService/fleets@2025-03-01' = {
   properties: {
     hubProfile: {
       agentProfile: {
-        subnetId: 'string'
-        vmSize: 'string'
+        vmSize: hubVmSize
       }
       apiServerAccessProfile: {
         enablePrivateCluster: false

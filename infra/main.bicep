@@ -6,7 +6,7 @@ param tags object = {
   environment: 'test'
   owners: 'fleet'
 }
-param vmsize string = 'Standard_D2ahs_v4'
+param vmsize string
 param fleetResourceGroup string = 'fleet-demo'
 param clustersResourceGroup string = '${fleetResourceGroup}-clusters'
 
@@ -41,6 +41,7 @@ module fleet './fleet.bicep' = {
   params: {
     name: fleetName
     location: fleetLocation
+    hubVmSize: vmsize
     tags: tags
   }
 }

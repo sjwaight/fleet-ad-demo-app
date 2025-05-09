@@ -5,7 +5,7 @@ param member object = {
   name: 'member-1-euap-azlinux'
   group: 'canary'
   dnsPrefix: 'member1'
-  location: 'eastus2euap'
+  location: 'eastus2'
   agentCount: 2
   agentVMSize: 'Standard_D2s_v3'
   osType: 'Linux'
