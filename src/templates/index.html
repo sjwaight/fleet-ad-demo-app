@@ -1,0 +1,9 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <h1>{% block title %} Welcome to Automated Deployments Demo {% endblock %}</h1>
+
+    <p class="lead">This is a simple demo of the Azure Kubernetes Fleet Manager Automated Deployments feature.</p>
+
+    <p class="lead">This demo is running on {{hostname}}.</p>
+{% endblock %}
