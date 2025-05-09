@@ -42,4 +42,4 @@ The result of the Bicep deployment is:
 
 - An Azure Kubernetes Fleet Manager with hub cluster.
 - Three AKS clusters joined as members (if you don't modify the number of clusters). Each cluster is assigned an update group.
-- An Fleet Manager [Update Strategy](https://learn.microsoft.com/azure/kubernetes-fleet/update-create-update-strategy?tabs=azure-portal) and [Auto-upgrade profile](https://learn.microsoft.com/azure/kubernetes-fleet/concepts-update-orchestration#understanding-auto-upgrade-profiles) for the member clusters which ensures they will be updated when new Kubernetes versions are available.
+- A Fleet Manager [Update Strategy](https://learn.microsoft.com/azure/kubernetes-fleet/update-create-update-strategy?tabs=azure-portal) and [Auto-upgrade profile](https://learn.microsoft.com/azure/kubernetes-fleet/concepts-update-orchestration#understanding-auto-upgrade-profiles) for the member clusters which ensures they will be updated when new Kubernetes versions are available.
