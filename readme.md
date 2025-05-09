@@ -2,7 +2,12 @@
 
 This repository contains the code and instructions to deploy a demo of the FMAD feature.
 
-## Deploying the Azure resources required for the demo
+It contains two main components:
+
+- A Bicep template to deploy the Azure resources required for the demo.
+- A simple Python Flask web application that will be containerized and deployed to Fleet member clusters.
+
+## Deploying Azure resources
 
 ### Prerequisites
 
