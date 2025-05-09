@@ -21,7 +21,7 @@ Deployment takes ~ 30 minutes depending on the number of clusters you are deploy
 
 ### Steps
 
-1. Modify the `main.bicepparam` file, setting details on VM sizes, number of member clusters (recommendation is minimum of 2), and the Azure region where the resources will be deployed. You can use non-production VM sizes for this demo.
+1. Modify the `infra/main.bicepparam` file, setting details on VM sizes, number of member clusters (recommendation is minimum of 2), and the Azure region where the resources will be deployed. You can use non-production VM sizes for this demo.
 
 1. Run the following command to deploy the Azure resources:
 
@@ -34,7 +34,7 @@ Deployment takes ~ 30 minutes depending on the number of clusters you are deploy
     --parameters main.bicepparam
    ```
 
-Troubleshooting: if you receive ERROR CODE: VMSizeNotSupported - select a different VM size and update `vmsize` in the `main.bicepparam` file. This is applied to all clusters including the Fleet Manager hub cluster.
+Troubleshooting: if you receive ERROR CODE: VMSizeNotSupported - select a different VM size and update `vmsize` in the `infra/main.bicepparam` file. This is applied to all clusters including the Fleet Manager hub cluster.
 
 ## Outputs
 
