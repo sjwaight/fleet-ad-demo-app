@@ -13,7 +13,7 @@ It contains two main components:
 
 - Check there is [sufficient vCPU quota](https://learn.microsoft.com/azure/virtual-machines/quotas?tabs=cli) in the regions you intend to use. This demo uses a single Subscription, but Fleet Manager can manage clusters in multiple subscriptions and regions as long as the subscriptions are linked to the same Entra ID tenant.
 
-- The Bicep deployment is targeted at the Azure Subscription level so your use must have permissions to create resource groups in addition to AKS clusters and Azure Kubernetes Fleet Manager resources.
+- The Bicep deployment is targeted at the Azure Subscription level so the user running the deployment must have permissions to create resource groups in addition to AKS clusters and Azure Kubernetes Fleet Manager resources.
 
 - Azure Kubernetes Fleet Manager requires your user to hold the `Azure Kubernetes Fleet Manager RBAC Cluster Admin` role in order to interact with the Fleet Manager hub cluster.
 
