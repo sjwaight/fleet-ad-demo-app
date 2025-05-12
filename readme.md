@@ -49,3 +49,28 @@ The result of the Bicep deployment is:
 - An Azure Container Registry.
 - Three AKS clusters joined as members (if you don't modify the number of clusters). Each cluster is assigned a Fleet Manager Update Group and is granted with `AcrPull` access to the Container Registry.
 - A Fleet Manager [Update Strategy](https://learn.microsoft.com/azure/kubernetes-fleet/update-create-update-strategy?tabs=azure-portal) and [Auto-upgrade profile](https://learn.microsoft.com/azure/kubernetes-fleet/concepts-update-orchestration#understanding-auto-upgrade-profiles) for the member clusters which ensures they will be updated when new Kubernetes versions are available.
+
+## Prepare Fleet Manager hub cluster
+
+Using the Azure CLI and `kubectl` we add a new namespace to the Fleet Manager hub cluster which will be used to stage our demo application resources.
+
+### Steps
+
+1. Connect to the Fleet Manager hub cluster:
+
+   ```bash
+   az fleet get-credentials \
+    --name <fleet-name> \
+    --resource-group <fleet-rg>
+   ```
+
+1. Once the credentials are downloaded, you can use `kubectl` to connect to the hub cluster.
+
+   ```bash
+   kubectl create namespace fmad-demo
+   ```
+
+Troubleshooting:
+
+1. If you receive a Forbidden error when attempting to create the namespace, check you have the `Azure Kubernetes Fleet Manager RBAC Cluster Admin` role assigned to your user. You may need to wait a few minutes for the role assignment to propagate before you can create the namespace.
+1. 
