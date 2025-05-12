@@ -15,6 +15,8 @@ It contains two main components:
 
 - The Bicep deployment is targeted at the Azure Subscription level so the user running the deployment must have permissions to create resource groups in addition to AKS clusters and Azure Kubernetes Fleet Manager resources.
 
+- The deployment creates an Entra ID role assignment, so the user running the deployment must have sufficient permissions to assign roles.
+
 - Azure Kubernetes Fleet Manager requires your user to hold the `Azure Kubernetes Fleet Manager RBAC Cluster Admin` role in order to interact with the Fleet Manager hub cluster.
 
 Deployment takes ~ 30 minutes depending on the number of clusters you are deploying. If you hit an error your can fix it and then re-run the deployment command. The Bicep deployment will only create resources that do not already exist.
@@ -34,12 +36,16 @@ Deployment takes ~ 30 minutes depending on the number of clusters you are deploy
     --parameters main.bicepparam
    ```
 
-Troubleshooting: if you receive ERROR CODE: VMSizeNotSupported - select a different VM size and update `vmsize` in the `infra/main.bicepparam` file. This is applied to all clusters including the Fleet Manager hub cluster.
+Troubleshooting:
+
+1. If during deployment you receive ERROR CODE: VMSizeNotSupported - select a different VM size and update `vmsize` in the `infra/main.bicepparam` file. This is applied to all clusters including the Fleet Manager hub cluster.
+1. If you re-run the deployment you may receive an error due to attempting to re-create the role assignment for the AKS clusters to use AcrPull on the Container Registry. These can safely be ignored. Once deployed you can validate access to the Container Registry and AKS clusters using the Azure CLI command `az aks check-acr` ([see docs](https://learn.microsoft.com/cli/azure/aks?view=azure-cli-latest#az-aks-check-acr)). Note there may be a delay before the role assignment is applied.
 
 ## Outputs
 
 The result of the Bicep deployment is:
 
 - An Azure Kubernetes Fleet Manager with hub cluster.
-- Three AKS clusters joined as members (if you don't modify the number of clusters). Each cluster is assigned an update group.
+- An Azure Container Registry.
+- Three AKS clusters joined as members (if you don't modify the number of clusters). Each cluster is assigned a Fleet Manager Update Group and is granted with `AcrPull` access to the Container Registry.
 - A Fleet Manager [Update Strategy](https://learn.microsoft.com/azure/kubernetes-fleet/update-create-update-strategy?tabs=azure-portal) and [Auto-upgrade profile](https://learn.microsoft.com/azure/kubernetes-fleet/concepts-update-orchestration#understanding-auto-upgrade-profiles) for the member clusters which ensures they will be updated when new Kubernetes versions are available.

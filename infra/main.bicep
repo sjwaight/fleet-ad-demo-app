@@ -1,6 +1,6 @@
 targetScope='subscription'
 
-param fleetName string = 'fleet-mgr'
+param fleetName string = 'flt-mgr-${uniqueString(subscription().id, fleetResourceGroup)}'
 param fleetLocation string = 'australiaeast'
 param tags object = {
   environment: 'test'
@@ -8,9 +8,23 @@ param tags object = {
 }
 param vmsize string
 param fleetResourceGroup string = 'fleet-demo'
-param clustersResourceGroup string = '${fleetResourceGroup}-clusters'
+param clusterRegistryResourceGroup string = '${fleetResourceGroup}-resources'
 
-// this gets overriden by the values in main.bicepparam
+@description('Specify a globally unique name for your Azure Container Registry')
+param acrName string = 'acrfmad${uniqueString(subscription().id, fleetResourceGroup)}'
+
+@description('Enable admin user for ACR')
+param acrAdminUserEnabled bool = false
+
+@description('ACR SKU')
+@allowed([
+  'Basic'
+  'Standard'
+  'Premium'
+])
+param acrSku string = 'Basic'
+
+// this gets overridden by the values in main.bicepparam
 param members array = [
   {
     name: 'member-1-canary-azlinux'
@@ -31,8 +45,21 @@ resource fltRG 'Microsoft.Resources/resourceGroups@2021-04-01' = {
 }
 
 resource clustersRG 'Microsoft.Resources/resourceGroups@2021-04-01' = {
-  name: clustersResourceGroup
+  name: clusterRegistryResourceGroup
   location: fleetLocation
+}
+
+module acr './registry.bicep' = {
+  scope: resourceGroup(clustersRG.name)
+  name: acrName
+  params: {
+    name: acrName
+    location: fleetLocation
+    fleetResourceGroup: fleetResourceGroup
+    tags: tags
+    sku: acrSku
+    adminUserEnabled: acrAdminUserEnabled
+  }
 }
 
 module fleet './fleet.bicep' = {
@@ -51,8 +78,9 @@ module member_clusters './member.bicep' =[for member in members: {
   name: '${member.name}-module'
   params: {
     tags: tags
-    clustersResourceGroup: clustersResourceGroup
+    clustersResourceGroup: clusterRegistryResourceGroup
     parentFleet: fleet.outputs.fleet
     member: member
+    containerRegistry: acr.outputs.containerRegistry
   }
 }]

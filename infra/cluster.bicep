@@ -1,5 +1,6 @@
 
 param tags object
+param containerRegistry resource 'Microsoft.ContainerRegistry/registries@2023-07-01'
 // this member object is overridden by the value in main.bicepparam, because it is passed as a parameter to the module.
 param member object = {
   name: 'member-1-canary-azlinux'
@@ -55,6 +56,17 @@ resource clusterResource 'Microsoft.ContainerService/managedClusters@2024-02-01'
     networkProfile: {
       networkPlugin: member.osType == 'Windows' ? 'azure' : 'kubenet'
     }
+  }
+}
+
+// Assign the AcrPull role to the managed identity of each member cluster
+resource acrPullRoleAssignment 'Microsoft.Authorization/roleAssignments@2022-04-01' = {
+  name: guid('${member.name}-acrpull-${containerRegistry.name}') 
+  scope: resourceGroup()
+  properties: {
+    roleDefinitionId: subscriptionResourceId('Microsoft.Authorization/roleDefinitions', '7f951dda-4ed3-4680-a7ca-43fe172d538d') // AcrPull role ID
+    principalId: clusterResource.properties.identityProfile.kubeletidentity.objectId
+    principalType: 'ServicePrincipal'
   }
 }
 

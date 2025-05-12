@@ -1,5 +1,6 @@
 param clustersResourceGroup string
 param parentFleet resource 'Microsoft.ContainerService/fleets@2025-03-01'
+param containerRegistry resource 'Microsoft.ContainerRegistry/registries@2023-07-01'
 param tags object
 param member object = {
   name: 'member-1-euap-azlinux'
@@ -18,6 +19,7 @@ module clusterResource './cluster.bicep' = {
   params: {
     tags: tags
     member: member
+    containerRegistry: containerRegistry
   }
 }
 
@@ -29,8 +31,11 @@ resource fleet 'Microsoft.ContainerService/fleets@2025-03-01' existing = {
 resource members_resource 'Microsoft.ContainerService/fleets/members@2025-03-01' = {
   parent: fleet
   name: member.name
+
   properties: {
     clusterResourceId: clusterResource.outputs.cluster.clusterId
     group: member.group
   }
 }
+
+output cluster object = clusterResource.outputs.cluster
