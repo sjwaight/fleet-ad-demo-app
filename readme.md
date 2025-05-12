@@ -73,4 +73,40 @@ Using the Azure CLI and `kubectl` we add a new namespace to the Fleet Manager hu
 Troubleshooting:
 
 1. If you receive a Forbidden error when attempting to create the namespace, check you have the `Azure Kubernetes Fleet Manager RBAC Cluster Admin` role assigned to your user. You may need to wait a few minutes for the role assignment to propagate before you can create the namespace.
-1. 
+
+## Use FMAG to stage application on Fleet Manager hub cluster
+
+Next we will use FMAD to build and stage the demo application on the Fleet Manager hub cluster. For this demo you can following the official Microsoft Learn tutorial.
+
+Once the application is staged you can confirm that the assets have been created.
+
+- Dockerfile and .dockerignore files are created in the ./src directory.
+- Kubernetes manifests are created in the ./src/manifests directory.
+
+On the Fleet Manager hub cluster you can see the following resources created in the `fmad-demo` namespace:
+
+- A Deployment for the demo application (`kubectl get deployments -n fmad-demo`). Pending status is expected as the application is not yet deployed to the member clusters and cannot be scheduled on the hub cluster.
+
+```output
+NAME           READY   UP-TO-DATE   AVAILABLE   AGE
+fm-ad-app-01   0/1     0            0           5m15s
+```
+ 
+- A LoadBalancer Service (`kubectl get svc -n fmad-demo`). The lack of an external IP is expected as the application is not yet deployed to the member clusters. 
+
+```output
+NAME           TYPE           CLUSTER-IP     EXTERNAL-IP   PORT(S)          AGE
+fm-ad-app-01   LoadBalancer   10.0.131.149   <pending>     8000:32289/TCP   6m28s
+```
+
+- A ConfigMap (`kubectl get cm -n fmad-demo`).
+
+```output
+NAME                  DATA   AGE
+fm-ad-app-01-config   0      7m31s
+kube-root-ca.crt      1      23m
+```
+
+### Place application onto member clusters
+
+The final step is to place the application onto the member clusters. In order to do this you need to write a [cluster resource placement](https://learn.microsoft.com/azure/kubernetes-fleet/quickstart-resource-propagation?tabs=azure-cli) manifest and manually add it to the list of manifests executed by the GitHub Actions workflow. In a future release we hope to provide a more intuitive way to do this for those who are not familiar with Kubernetes.
